@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { $npmConfigName1693735177033 } from "../migrations/1693735177033-$npm_config_name"
 import { $npmConfigName1693747672003 } from '../migrations/1693747672003-$npm_config_name';
+import { $npmConfigName1694666007533 } from '../migrations/1694666007533-$npm_config_name';
 
 config();
 
@@ -16,5 +17,5 @@ export default new DataSource({
   password: configService.get('POSTGRES_PASSWORD'),
   database: configService.get('POSTGRES_DB'),
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [$npmConfigName1693735177033, $npmConfigName1693747672003]
+  migrations: [$npmConfigName1694666007533]
 });

@@ -26,9 +26,9 @@ export class AuthService {
     let keys = Object.keys(dataRegistrasi)
     const err = {status: "error", msg: "Unable to register"};
 
-    if (!(keys.includes("mahasiswa")) && !(keys.includes("dosen"))) {
-        return err
-    }
+    // if (!(keys.includes("mahasiswa")) && !(keys.includes("dosen"))) {
+    //     return err
+    // }
    
     let user = await this.userService.create(dataRegistrasi._user);
     if (!user){
@@ -36,17 +36,17 @@ export class AuthService {
     }
 
 
-    if (dataRegistrasi._user.role === "mahasiswa") {
-        if (!(await this.mahasiswaService.create(dataRegistrasi.mahasiswa, user.id))) {
-            return err
-        }
-    }
+    // if (dataRegistrasi._user.role === "mahasiswa") {
+    //     if (!(await this.mahasiswaService.create(dataRegistrasi.mahasiswa, user.id))) {
+    //         return err
+    //     }
+    // }
 
-    if (dataRegistrasi._user.role === "dosen") {
-        if (!(await this.dosenService.create(dataRegistrasi.dosen, user.id))){
-            return err
-        }
-    }
+    // if (dataRegistrasi._user.role === "dosen") {
+    //     if (!(await this.dosenService.create(dataRegistrasi.dosen, user.id))){
+    //         return err
+    //     }
+    // }
 
     return user;
   }

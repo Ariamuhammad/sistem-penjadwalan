@@ -5,8 +5,6 @@ import { User } from "../schemas/user.entity";
 export interface registerData {
     data: {
         _user: User
-        mahasiswa?: Mahasiswa
-        dosen?: Dosen
     };
 
 }

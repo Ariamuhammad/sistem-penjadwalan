@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DosenService, JadwalService, MahasiswaService, UserService } from './applications.service';
-import { MahasiswaController } from './applications.controller';
+import { DosenController, MahasiswaController } from './applications.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mahasiswa } from "./schemas/mahasiswa.entity"
 import { User } from './schemas/user.entity';
@@ -34,7 +34,8 @@ export class UserModule {}
 @Module({
     imports: [TypeOrmModule.forFeature([Dosen, User])],
     providers: [DosenService],
-    exports: [DosenService]
+    exports: [DosenService],
+    controllers: [DosenController]
 })
 export class DosenModule {}
 

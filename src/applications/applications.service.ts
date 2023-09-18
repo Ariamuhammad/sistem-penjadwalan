@@ -11,8 +11,10 @@ import { CreateJadwal } from './dto/jadwal';
 import { Dosen } from './schemas/dosen.entity';
 import { CreateDosen } from './dto/dosen';
 
+//MAHASISWA
 @Injectable()
 export class MahasiswaService {
+  
   constructor(
     @InjectRepository(Mahasiswa)
     private readonly mahasiswaRepository: Repository<Mahasiswa>,
@@ -20,9 +22,24 @@ export class MahasiswaService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(data: CreateMahasiswa, id: number) {
-    let user = await this.userRepository.findOne({ where: { id }})
-    return await this.mahasiswaRepository.save({...data, user });
+  async findAll(): Promise<Mahasiswa[]> {
+    return this.mahasiswaRepository.find();
+  }
+
+  async findOne(id: number): Promise<Mahasiswa> {
+    return this.mahasiswaRepository.findOne({ where: { id } });
+  }
+
+  async create(data: CreateMahasiswa) {
+    return await this.mahasiswaRepository.save({...data});
+  }
+
+  async update(id: number, mahasiswaData: Mahasiswa): Promise<Mahasiswa> {
+    return this.mahasiswaRepository.save({ id, ...mahasiswaData });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.mahasiswaRepository.delete(id);
   }
 }
 
@@ -38,6 +55,8 @@ export class JadwalService {
   }
 }
 
+
+//DOSEN
 @Injectable()
 export class DosenService {
   constructor(
@@ -47,10 +66,26 @@ export class DosenService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(data: CreateDosen, id: number) {
-    let user = await this.userRepository.findOne({ where: { id } })
-    return await this.dosenRepository.save({...data, user});
+  async findAll(): Promise<Dosen[]> {
+    return this.dosenRepository.find();
   }
+
+  async findOne(id: number): Promise<Dosen> {
+    return this.dosenRepository.findOne({ where: { id } });
+  }
+
+  async create(data: CreateDosen) {
+    return await this.dosenRepository.save({...data});
+  }
+
+  async update(id: number, dosenData: Dosen): Promise<Dosen> {
+    return this.dosenRepository.save({ id, ...dosenData });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.dosenRepository.delete(id);
+  }
+
 }
 
 @Injectable()

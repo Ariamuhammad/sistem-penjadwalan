@@ -11,21 +11,19 @@ export class Mahasiswa {
     @Column()
     nama: string;
 
-    @ManyToOne(() => Dosen)
-    @JoinColumn()
-    dosen: Dosen;
+    // @ManyToOne(() => Dosen)
+    // @JoinColumn()
+    // dosen: Dosen;
   
     @Column()
     nim: string;
+    
 
-    @OneToOne(() => User)
-    @JoinColumn()
-    user: User;
+    // @OneToOne(() => User)
+    // @JoinColumn()
+    // user: User;
   
     @OneToMany(() => Jadwal, (jadwal) => jadwal.mahasiswa)
     @JoinColumn()
     jadwal: Jadwal[];
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
 }
