@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DosenService, JadwalService, MahasiswaService, UserService } from './applications.service';
-import { DosenController, MahasiswaController } from './applications.controller';
+import { DosenService, JadwalService, MahasiswaService, MataKuliahService, RuanganService, UserService } from './applications.service';
+import { DosenController, MahasiswaController, MataKuliahController, RuanganController } from './applications.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mahasiswa } from "./schemas/mahasiswa.entity"
 import { User } from './schemas/user.entity';
@@ -9,6 +9,7 @@ import { MataKuliah } from './schemas/matakuliah.entity';
 import { Jadwal } from './schemas/jadwal.entity';
 import { Dosen } from './schemas/dosen.entity';
 
+//MAHASISWA
 @Module({
   imports: [TypeOrmModule.forFeature([Mahasiswa, User])],
   providers: [MahasiswaService],
@@ -17,20 +18,7 @@ import { Dosen } from './schemas/dosen.entity';
 })
 export class MahasiswaModule {}
 
-@Module({
-    imports: [TypeOrmModule.forFeature([Jadwal, Mahasiswa, Dosen, User])],
-    providers: [JadwalService],
-    controllers: [],
-  })
-  export class JadwalModule {}
-
-@Module({
-    imports: [TypeOrmModule.forFeature([User])],
-    providers: [UserService],
-    exports: [UserService]
-})
-export class UserModule {}
-
+//DOSEN
 @Module({
     imports: [TypeOrmModule.forFeature([Dosen, User])],
     providers: [DosenService],
@@ -39,11 +27,45 @@ export class UserModule {}
 })
 export class DosenModule {}
 
+//RUANGAN
+@Module({
+  imports: [TypeOrmModule.forFeature([Ruangan])],
+  providers: [RuanganService],
+  exports: [RuanganService],
+  controllers: [RuanganController]
+})
+export class RuanganModule {}
+
+//MATAKULIAH
+@Module({
+  imports: [TypeOrmModule.forFeature([MataKuliah])],
+  providers: [MataKuliahService],
+  exports: [MataKuliahService],
+  controllers: [MataKuliahController]
+})
+export class MataKuliahModule {}
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Jadwal, Mahasiswa, Dosen, User])],
+  providers: [JadwalService],
+  controllers: [],
+})
+export class JadwalModule {}
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UserService],
+  exports: [UserService]
+})
+export class UserModule {}
 
 export default [
+    DosenModule,
     MahasiswaModule,
     UserModule,
     JadwalModule,
-    DosenModule
+    RuanganModule,
+    MataKuliahModule
+    
 ]
   

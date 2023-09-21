@@ -1,4 +1,4 @@
-export interface CreateDosen {
-  kode?: string;
+export interface CreateMataKuliah {
+  kodeMatakuliah?: string;
   nama?: string;
 }

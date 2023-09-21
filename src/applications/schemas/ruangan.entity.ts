@@ -7,4 +7,7 @@ export class Ruangan {
 
   @Column()
   nama: string;
+
+  @Column()
+  kodeRuangan: string;
 }

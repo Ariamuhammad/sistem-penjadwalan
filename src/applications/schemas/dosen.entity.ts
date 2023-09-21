@@ -8,14 +8,17 @@ export class Dosen {
   id: number;
 
   @Column()
+  kodeDosen: string;
+
+  @Column()
   nama: string;
 
   @Column()
   nip: string;
 
-  @OneToOne(() => User)
-    @JoinColumn()
-    user: User;
+  // @OneToOne(() => User)
+  //   @JoinColumn()
+  //   user: User;
 
   @OneToMany(() => Jadwal, (jadwal) => jadwal.dosen)
   @JoinColumn()

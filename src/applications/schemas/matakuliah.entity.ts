@@ -6,7 +6,7 @@ export class MataKuliah {
   id: number;
 
   @Column()
-  kode: string;
+  kodeMatakuliah: string;
 
   @Column()
   nama: string;

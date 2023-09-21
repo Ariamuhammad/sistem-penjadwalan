@@ -4,6 +4,9 @@ import { DataSource } from 'typeorm';
 import { $npmConfigName1693735177033 } from "../migrations/1693735177033-$npm_config_name"
 import { $npmConfigName1693747672003 } from '../migrations/1693747672003-$npm_config_name';
 import { $npmConfigName1694666007533 } from '../migrations/1694666007533-$npm_config_name';
+import { $npmConfigName1695090173731 } from '../migrations/1695090173731-$npm_config_name';
+import { $npmConfigName1695287739828 } from '../migrations/1695287739828-$npm_config_name';
+import { $npmConfigName1695287903568 } from '../migrations/1695287903568-$npm_config_name';
 
 config();
 
@@ -17,5 +20,5 @@ export default new DataSource({
   password: configService.get('POSTGRES_PASSWORD'),
   database: configService.get('POSTGRES_DB'),
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [$npmConfigName1694666007533]
+  migrations: [$npmConfigName1695287903568]
 });

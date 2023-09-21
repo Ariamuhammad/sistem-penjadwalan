@@ -1,8 +1,9 @@
 import { Body, Controller, Post, Get, Put, Delete, Param, NotFoundException } from '@nestjs/common';
-import { DosenService, JadwalService, MahasiswaService } from './applications.service';
+import { DosenService, JadwalService, MahasiswaService, MataKuliahService, RuanganService } from './applications.service';
 import { CreateMahasiswa } from './dto/mahasiswa';
 import { CreateJadwal } from './dto/jadwal';
 
+//MAHASISWA
 @Controller('mahasiswa')
 export class MahasiswaController {
   constructor(private mahasiswaService: MahasiswaService) {}
@@ -14,11 +15,17 @@ export class MahasiswaController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
+    const mahasiswa = await this.mahasiswaService.findOne(id);
+
+    if (!mahasiswa) {
+      throw new NotFoundException('Data mahasiswa tidak ditemukan');
+    }
     return this.mahasiswaService.findOne(id);
   }
 
   @Post()
   async create(@Body() mahasiswaData: any) {
+
     return this.mahasiswaService.create(mahasiswaData);
   }
 
@@ -54,6 +61,7 @@ export class MahasiswaController {
   }
 }
 
+//DOSEN
 @Controller('dosen')
 export class DosenController {
   constructor(private dosenService: DosenService) {}
@@ -65,6 +73,11 @@ export class DosenController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
+    const dosen = await this.dosenService.findOne(id);
+
+    if (!dosen) {
+      throw new NotFoundException('Data ruangan tidak ditemukan');
+    }
     return this.dosenService.findOne(id);
   }
 
@@ -79,8 +92,10 @@ export class DosenController {
     const dosen = await this.dosenService.findOne(id);
 
     // Perbarui bidang-bidang yang diperlukan
+
     dosen.nama = dosenData.nama;
     dosen.nip = dosenData.nip;
+    dosen.kodeDosen = dosenData.kodeDosen;
 
     // Simpan pembaruan ke database
     await this.dosenService.update(id, dosen);
@@ -106,6 +121,125 @@ export class DosenController {
   }
 
 }
+
+//RUANGAN
+@Controller('ruangan')
+export class RuanganController {
+  constructor(private ruanganService: RuanganService) {}
+
+  @Get()
+  async findAll() {
+    return this.ruanganService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
+    const ruangan = await this.ruanganService.findOne(id);
+
+    if (!ruangan) {
+      throw new NotFoundException('Data ruangan tidak ditemukan');
+    }
+    return this.ruanganService.findOne(id);
+  }
+
+  @Post()
+  async create(@Body() ruanganData: any) {
+    return this.ruanganService.create(ruanganData);
+  }
+
+  
+  @Put(':id')
+  async update(@Param('id') id: number, @Body() ruanganData: any) {
+    const ruangan = await this.ruanganService.findOne(id);
+
+    // Perbarui bidang-bidang yang diperlukan
+    ruangan.nama = ruanganData.nama;
+    ruangan.kodeRuangan = ruanganData.kodeRuangan;
+
+    // Simpan pembaruan ke database
+    await this.ruanganService.update(id, ruangan);
+
+    // Berikan respons yang sesuai
+    return { message: 'Data ruangan berhasil diperbarui' };
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    // Temukan data ruangan berdasarkan ID
+    const ruangan = await this.ruanganService.findOne(id);
+
+    if (!ruangan) {
+      throw new NotFoundException('Data ruangan tidak ditemukan');
+    }
+
+    // Hapus data ruangan dari database
+    await this.ruanganService.delete(id);
+
+    // Berikan respons yang sesuai
+    return { message: 'Data ruangan berhasil dihapus' };
+  }
+
+}
+
+//MATAKULIAH
+@Controller('mata-kuliah')
+export class MataKuliahController {
+  constructor(private matkulService: MataKuliahService) {}
+
+  @Get()
+  async findAll() {
+    return this.matkulService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
+    const ruangan = await this.matkulService.findOne(id);
+
+    if (!ruangan) {
+      throw new NotFoundException('Data Mata Kuliah tidak ditemukan');
+    }
+    return this.matkulService.findOne(id);
+  }
+
+  @Post()
+  async create(@Body() matkulData: any) {
+    return this.matkulService.create(matkulData);
+  }
+
+  
+  @Put(':id')
+  async update(@Param('id') id: number, @Body() matkulData: any) {
+    const matkul = await this.matkulService.findOne(id);
+
+    // Perbarui bidang-bidang yang diperlukan
+    matkul.nama = matkulData.nama;
+    matkul.kodeMatakuliah = matkulData.kodeMatakuliah;
+
+    // Simpan pembaruan ke database
+    await this.matkulService.update(id, matkul);
+
+    // Berikan respons yang sesuai
+    return { message: 'Data Mata Kuliah berhasil diperbarui' };
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    // Temukan data Mata Kuliah berdasarkan ID
+    const ruangan = await this.matkulService.findOne(id);
+
+    if (!ruangan) {
+      throw new NotFoundException('Data Mata Kuliah tidak ditemukan');
+    }
+
+    // Hapus data Mata Kuliah dari database
+    await this.matkulService.delete(id);
+
+    // Berikan respons yang sesuai
+    return { message: 'Data Mata Kuliah berhasil dihapus' };
+  }
+
+}
+
 
 @Controller('jadwal')
 export class JadwalController {
