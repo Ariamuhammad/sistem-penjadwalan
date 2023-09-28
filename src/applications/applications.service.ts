@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Observable, from } from 'rxjs';
 
@@ -22,6 +22,8 @@ export class MahasiswaService {
   constructor(
     @InjectRepository(Mahasiswa)
     private readonly mahasiswaRepository: Repository<Mahasiswa>,
+    @InjectRepository(Dosen)
+    private readonly dosenRepository: Repository<Dosen>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -148,10 +150,68 @@ export class JadwalService {
   constructor(
     @InjectRepository(Jadwal)
     private readonly jadwalRepository: Repository<Jadwal>,
+    @InjectRepository(Dosen) // Import dan inject entitas Dosen
+    private readonly dosenRepository: Repository<Dosen>,
+    @InjectRepository(Ruangan) // Import dan inject entitas Ruangan
+    private readonly ruanganRepository: Repository<Ruangan>,
+    @InjectRepository(MataKuliah) // Import dan inject entitas MataKuliah
+    private readonly mataKuliahRepository: Repository<MataKuliah>,
   ) {}
 
-  create(jadwal: CreateJadwal): Observable<CreateJadwal> {
-    return from(this.jadwalRepository.save(jadwal));
+  async findAll(): Promise<Jadwal[]> {
+    return this.jadwalRepository.find({
+      relations: ['dosen', 'mataKuliah', 'ruangan'],
+      select: ['id', 'waktuMulai', 'waktuSelesai'],
+    });
+  }
+
+  async findOne(id: number): Promise<Jadwal> {
+    return this.jadwalRepository.findOne({ where: { id } });
+  }
+
+  // Fungsi untuk mencari entitas Dosen berdasarkan ID
+  async findDosenById(id: number) {
+    return this.dosenRepository.findOne({ where: { id } });
+  }
+
+  // Fungsi untuk mencari entitas Ruangan berdasarkan ID
+  async findRuanganById(id: number) {
+    return this.ruanganRepository.findOne({ where: { id } });
+  }
+
+  // Fungsi untuk mencari entitas Mata Kuliah berdasarkan ID
+  async findMataKuliahById(id: number) {
+    return this.mataKuliahRepository.findOne({ where: { id } });
+  }
+
+  async create(createJadwal: CreateJadwal): Promise<Jadwal> {
+    // Cari entitas Dosen, Ruangan, dan Mata Kuliah berdasarkan ID
+    const dosen = await this.findDosenById(createJadwal.dosen);
+    const ruangan = await this.findRuanganById(createJadwal.ruangan);
+    const mataKuliah = await this.findMataKuliahById(createJadwal.mataKuliah);
+
+    if (!dosen || !ruangan || !mataKuliah) {
+      throw new NotFoundException('Dosen, Ruangan, atau Mata Kuliah tidak ditemukan');
+    }
+
+    // Buat jadwal baru dan hubungkan dengan entitas yang sudah ada
+    const jadwal = new Jadwal();
+    jadwal.dosen = dosen;
+    jadwal.ruangan = ruangan;
+    jadwal.mataKuliah = mataKuliah;
+    jadwal.waktuMulai = createJadwal.waktuMulai;
+    jadwal.waktuSelesai = createJadwal.waktuSelesai;
+
+    // Simpan jadwal ke database
+    return this.jadwalRepository.save(jadwal);
+  }
+
+  async update(id: number, jadwal: Jadwal): Promise<Jadwal> {
+    return this.jadwalRepository.save({ id, ...jadwal });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.jadwalRepository.delete(id);
   }
 }
 

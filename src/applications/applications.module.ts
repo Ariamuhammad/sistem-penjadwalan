@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DosenService, JadwalService, MahasiswaService, MataKuliahService, RuanganService, UserService } from './applications.service';
-import { DosenController, MahasiswaController, MataKuliahController, RuanganController } from './applications.controller';
+import { DosenController, JadwalController, MahasiswaController, MataKuliahController, RuanganController } from './applications.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mahasiswa } from "./schemas/mahasiswa.entity"
 import { User } from './schemas/user.entity';
@@ -11,7 +11,7 @@ import { Dosen } from './schemas/dosen.entity';
 
 //MAHASISWA
 @Module({
-  imports: [TypeOrmModule.forFeature([Mahasiswa, User])],
+  imports: [TypeOrmModule.forFeature([Mahasiswa, Dosen, User])],
   providers: [MahasiswaService],
   exports: [MahasiswaService],
   controllers: [MahasiswaController],
@@ -46,9 +46,10 @@ export class RuanganModule {}
 export class MataKuliahModule {}
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Jadwal, Mahasiswa, Dosen, User])],
+  imports: [TypeOrmModule.forFeature([Jadwal, Mahasiswa, Dosen, Ruangan, MataKuliah])],
   providers: [JadwalService],
-  controllers: [],
+  exports:[JadwalService],
+  controllers: [JadwalController],
 })
 export class JadwalModule {}
 

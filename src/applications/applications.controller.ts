@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Put, Delete, Param, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Delete, Param, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { DosenService, JadwalService, MahasiswaService, MataKuliahService, RuanganService } from './applications.service';
 import { CreateMahasiswa } from './dto/mahasiswa';
 import { CreateJadwal } from './dto/jadwal';
@@ -76,7 +76,7 @@ export class DosenController {
     const dosen = await this.dosenService.findOne(id);
 
     if (!dosen) {
-      throw new NotFoundException('Data ruangan tidak ditemukan');
+      throw new NotFoundException('Data dosen tidak ditemukan');
     }
     return this.dosenService.findOne(id);
   }
@@ -159,7 +159,7 @@ export class RuanganController {
     // Simpan pembaruan ke database
     await this.ruanganService.update(id, ruangan);
 
-    // Berikan respons yang sesuai
+    // Response
     return { message: 'Data ruangan berhasil diperbarui' };
   }
 
@@ -193,9 +193,9 @@ export class MataKuliahController {
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    const ruangan = await this.matkulService.findOne(id);
+    const matkul = await this.matkulService.findOne(id);
 
-    if (!ruangan) {
+    if (!matkul) {
       throw new NotFoundException('Data Mata Kuliah tidak ditemukan');
     }
     return this.matkulService.findOne(id);
@@ -212,22 +212,22 @@ export class MataKuliahController {
     const matkul = await this.matkulService.findOne(id);
 
     // Perbarui bidang-bidang yang diperlukan
-    matkul.nama = matkulData.nama;
     matkul.kodeMatakuliah = matkulData.kodeMatakuliah;
+    matkul.nama = matkulData.nama;
 
     // Simpan pembaruan ke database
     await this.matkulService.update(id, matkul);
 
-    // Berikan respons yang sesuai
+    // Response
     return { message: 'Data Mata Kuliah berhasil diperbarui' };
   }
 
   @Delete(':id')
   async delete(@Param('id') id: number) {
     // Temukan data Mata Kuliah berdasarkan ID
-    const ruangan = await this.matkulService.findOne(id);
+    const matkul = await this.matkulService.findOne(id);
 
-    if (!ruangan) {
+    if (!matkul) {
       throw new NotFoundException('Data Mata Kuliah tidak ditemukan');
     }
 
@@ -245,8 +245,69 @@ export class MataKuliahController {
 export class JadwalController {
   constructor(private jadwalService: JadwalService) {}
 
-  @Post("create")
-  create(@Body() post: CreateJadwal) {
-    return this.jadwalService.create(post);
+  @Get()
+  async findAll() {
+    const jadwal = await this.jadwalService.findAll();
+    return jadwal;
   }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
+    const matkul = await this.jadwalService.findOne(id);
+
+    if (!matkul) {
+      throw new NotFoundException('Data Jadwal tidak ditemukan');
+    }
+    return this.jadwalService.findOne(id);
+  }
+
+  @Post()
+  async create(@Body() createJadwal : CreateJadwal) {
+    try {
+      const jadwal = await this.jadwalService.create(createJadwal);
+      return jadwal;
+    } catch (error) {
+      if (error.code === '23505') {
+        // Penanganan error untuk duplikasi
+        throw new HttpException('Data sudah ada', HttpStatus.CONFLICT);
+      } else {
+        throw new HttpException('Terjadi kesalahan', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+  }
+  
+  @Put(':id')
+  async update(@Param('id') id: number, @Body() jadwalData: any) {
+    const jadwal = await this.jadwalService.findOne(id);
+
+    // Perbarui bidang-bidang yang diperlukan
+    jadwal.dosen = jadwalData.dosen;
+    jadwal.mataKuliah = jadwalData.mataKuliah;
+    jadwal.ruangan = jadwalData.ruangan;
+    jadwal.waktuMulai = jadwalData.waktuMulai;
+    jadwal.waktuSelesai = jadwalData.waktuSelesai;
+
+    // Simpan pembaruan ke database
+    await this.jadwalService.update(id, jadwal);
+
+    // Berikan respons yang sesuai
+    return { message: 'Data Jadwal berhasil diperbarui' };
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    // Temukan data Jadwal berdasarkan ID
+    const jadwal = await this.jadwalService.findOne(id);
+
+    if (!jadwal) {
+      throw new NotFoundException('Data Jadwal tidak ditemukan');
+    }
+
+    // Hapus data Jadwal dari database
+    await this.jadwalService.delete(id);
+
+    // Berikan respons yang sesuai
+    return { message: 'Data Jadwal berhasil dihapus' };
+  }
+
 }

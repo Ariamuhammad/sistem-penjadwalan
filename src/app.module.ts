@@ -27,12 +27,7 @@ import { join } from 'path';
       })
     }),
     AuthModule,
-    JwtModule.register({
-      secret: 'your-secret-key', // Replace with your actual secret key
-      signOptions: { expiresIn: '1h' }, // Token expiration time
-    }),
     ...applicationsModule,
-    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

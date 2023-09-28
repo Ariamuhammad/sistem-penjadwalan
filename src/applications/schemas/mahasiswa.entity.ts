@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn,OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn } from 'typeorm';
 import { Jadwal } from './jadwal.entity';
 import { Dosen } from './dosen.entity';
 import { User } from './user.entity';
@@ -23,7 +23,7 @@ export class Mahasiswa {
     // @JoinColumn()
     // user: User;
   
-    @OneToMany(() => Jadwal, (jadwal) => jadwal.mahasiswa)
+    @ManyToMany(() => Jadwal, (jadwal) => jadwal.mahasiswa)
     @JoinColumn()
     jadwal: Jadwal[];
 }
