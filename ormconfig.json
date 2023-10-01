@@ -1,0 +1,16 @@
+{
+    "type": "postgres",
+    "host": "containers-us-west-59.railway.app",
+    "port": 6431,
+    "username": "postgres",
+    "password": "qtwONUEC94nCA4KuI13L",
+    "database": "railway",
+    "synchronize": false,
+    "logging": true,
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "migrations": ["dist/migrations/*{.ts,.js}"],
+    "cli": {
+      "migrationsDir": "src/migrations"
+    }
+  }
+  
