@@ -23,6 +23,7 @@ import { join } from 'path';
         username: configService.get('POSTGRES_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
+        url: configService.get('POSTGRES_URL'),
         entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
       })
     }),

@@ -17,6 +17,7 @@ export default new DataSource({
   username: configService.get('POSTGRES_USER'),
   password: configService.get('POSTGRES_PASSWORD'),
   database: configService.get('POSTGRES_DB'),
+  url: configService.get('POSTGRES_URL'),
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   migrations: [$npmConfigName1695574521244]
 });
